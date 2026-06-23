@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Area · Focus · Project</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
+      background-color: #f5f5f7;
+      color: #1d1d1f;
+      font-size: 17px;
+      line-height: 1.47;
+      letter-spacing: -0.374px;
+    }
+
+    /* Nav */
+    nav {
+      background-color: #000;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 32px;
+    }
+    nav span {
+      font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
+      font-size: 12px;
+      color: #fff;
+      letter-spacing: -0.12px;
+      opacity: 0.8;
+    }
+    nav span.active { opacity: 1; }
+
+    /* Page title */
+    header {
+      background-color: #fff;
+      padding: 48px 80px 32px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    header h1 {
+      font-family: "SF Pro Display", system-ui, -apple-system, sans-serif;
+      font-size: 40px;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: 0;
+      color: #1d1d1f;
+    }
+    header p {
+      margin-top: 8px;
+      font-size: 17px;
+      font-weight: 400;
+      color: #7a7a7a;
+      letter-spacing: -0.374px;
+    }
+
+    /* Main layout */
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    /* Area card */
+    .area {
+      background-color: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .area-header {
+      padding: 24px 32px 20px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .area-header h2 {
+      font-family: "SF Pro Display", system-ui, -apple-system, sans-serif;
+      font-size: 21px;
+      font-weight: 600;
+      line-height: 1.19;
+      letter-spacing: 0.231px;
+      color: #1d1d1f;
+    }
+    .area-header .mission {
+      margin-top: 4px;
+      font-size: 14px;
+      color: #7a7a7a;
+      letter-spacing: -0.224px;
+    }
+    .area-badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 400;
+      color: #0066cc;
+      background-color: #e8f0fb;
+      border-radius: 9999px;
+      padding: 2px 10px;
+      margin-bottom: 8px;
+      letter-spacing: -0.12px;
+    }
+
+    /* Focus sections */
+    .focus-list {
+      padding: 0 32px 16px;
+    }
+
+    .focus {
+      padding: 16px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .focus:last-child { border-bottom: none; }
+
+    .focus-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1d1d1f;
+      letter-spacing: -0.224px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Projects */
+    .project {
+      margin: 6px 0 4px 16px;
+    }
+    .project-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      letter-spacing: -0.224px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Tasks */
+    .task-list {
+      margin: 4px 0 2px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .task {
+      font-size: 14px;
+      font-weight: 400;
+      color: #1d1d1f;
+      letter-spacing: -0.224px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .task.done {
+      color: #7a7a7a;
+      text-decoration: line-through;
+      text-decoration-color: #ccc;
+    }
+    .task.routine {
+      color: #0066cc;
+    }
+
+    /* Standalone focus (자기개발) */
+    .focus-inline {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .focus-inline:last-child { border-bottom: none; }
+    .focus-inline .focus-title { margin-bottom: 0; }
+
+    /* Badge chips */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 400;
+      border-radius: 9999px;
+      padding: 2px 10px;
+      letter-spacing: -0.12px;
+    }
+    .chip-routine {
+      background-color: #e8f0fb;
+      color: #0066cc;
+    }
+    .chip-task {
+      background-color: #f5f5f7;
+      color: #7a7a7a;
+    }
+
+    /* Unresolved section */
+    .unresolved {
+      background-color: #272729;
+      border-radius: 18px;
+      padding: 24px 32px;
+      color: #fff;
+    }
+    .unresolved h3 {
+      font-family: "SF Pro Display", system-ui, -apple-system, sans-serif;
+      font-size: 21px;
+      font-weight: 600;
+      letter-spacing: 0.231px;
+      margin-bottom: 16px;
+    }
+    .unresolved .task {
+      color: #ccc;
+    }
+    .unresolved .project-title {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="active">동환</span>
+  <span>신앙</span>
+  <span>업무</span>
+  <span>가정</span>
+  <span>자기개발</span>
+</nav>
+
+<header>
+  <span class="area-badge">Area · Focus · Project</span>
+  <h1>생활 구조 정리</h1>
+  <p>4개 Area · 14개 Focus · 반복 활동은 Routine 레이어로 분리</p>
+</header>
+
+<main>
+
+  <!-- 신앙 -->
+  <div class="area">
+    <div class="area-header">
+      <span class="area-badge">🗂 Area</span>
+      <h2>신앙</h2>
+      <p class="mission">말씀에 미친 사람이 되자 / 반드시 전도</p>
+    </div>
+    <div class="focus-list">
+
+      <div class="focus">
+        <div class="focus-title">💡 중고등부 분반</div>
+        <div class="project">
+          <div class="project-title">🚀 분반수련회 <span class="chip chip-task">주제: 중독 / 구원확신</span></div>
+          <div class="task-list">
+            <div class="task">✅ 참빛 준비</div>
+            <div class="task">✅ 기도 명단 만들기</div>
+            <div class="task">✅ 강현이 질의응답 (잃어질 수 있는 구원)</div>
+            <div class="task">✅ 세계 교회사 정리</div>
+            <div class="task">✅ 교회 노션 백업</div>
+            <div class="task routine">🔁 중고등부 암송</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="focus">
+        <div class="focus-title">💡 찬양</div>
+        <div class="project">
+          <div class="project-title">🚀 찬양의밤</div>
+          <div class="task-list">
+            <div class="task">✅ 시작찬양 준비</div>
+            <div class="task">✅ 기타 연습</div>
+            <div class="task">✅ 삼촌 찬양의밤 초대</div>
+            <div class="task">✅ 6월 모두회 특송 연습</div>
+            <div class="task">✅ 하계 찬양 준비</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="focus">
+        <div class="focus-title">💡 말씀 묵상</div>
+        <div class="project">
+          <div class="project-title">🚀 성경 통독 2026</div>
+          <div class="task-list">
+            <div class="task">✅ 로마서 1장 읽기</div>
+            <div class="task done">✔︎ 잠언 19장</div>
+            <div class="task routine">🔁 QT</div>
+            <div class="task routine">🔁 교회 성경읽기 (점심)</div>
+            <div class="task routine">🔁 교회 암송 [욥7:17-19] / [욥23:10] / [전5:2]</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="focus">
+        <div class="focus-title">💡 전도</div>
+        <div class="project">
+          <div class="project-title">🚀 가족 전도</div>
+          <div class="task-list">
+            <div class="task">✅ 할아버지 전도 장소 정하기</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 업무 -->
+  <div class="area">
+    <div class="area-header">
+      <span class="area-badge">🗂 Area</span>
+      <h2>업무</h2>
+      <p class="mission">6월까지 이직 (이력·공고·강화 아이템·환경 조사)</p>
+    </div>
+    <div class="focus-list">
+
+      <div class="focus">
+        <div class="focus-title">💡 업무 역량</div>
+        <div class="project">
+          <div class="project-title">🚀 공부 내용 정리 <span class="chip chip-task">로봇·PLC·AP·PIO</span></div>
+          <div class="task-list">
+            <div class="task routine">🔁 회의내용 F/U</div>
+          </div>
+        </div>
+        <div class="project">
+          <div class="project-title">🚀 직무스터디 정리·업로드</div>
+          <div class="task-list">
+            <div class="task">✅ 업무 정리 및 준비 (시스템 특성·목적 파악)</div>
+            <div class="task">✅ 계획 짜기</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="focus">
+        <div class="focus-title">💡 커리어 개발</div>
+        <div class="project">
+          <div class="project-title">🚀 Background 조사 <span class="chip chip-task">진로 → 산업현황 → 면접</span></div>
+          <div class="task-list">
+            <div class="task">✅ 시스템 배우기</div>
+            <div class="task">✅ AI 학습</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="focus">
+        <div class="focus-title">💡 이직 준비</div>
+        <div class="project">
+          <div class="project-title">🚀 포트폴리오 리뉴얼</div>
+        </div>
+        <div class="project">
+          <div class="project-title">🚀 현대차 지원</div>
+          <div class="task-list">
+            <div class="task">✅ 진로 고민 및 정리 (밤에)</div>
+            <div class="task">✅ 리멤버 작성</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 가정 -->
+  <div class="area">
+    <div class="area-header">
+      <span class="area-badge">🗂 Area</span>
+      <h2>가정</h2>
+      <p class="mission">주예의 만족을 90일간 유지 (경제 안정·집안일·은유·행복)</p>
+    </div>
+    <div class="focus-list">
+
+      <div class="focus">
+        <div class="focus-title">💡 재정 개선</div>
+        <div class="project">
+          <div class="project-title">🚀 가계부 개선</div>
+          <div class="task-list">
+            <div class="task">✅ 지출 내역 총정리 (농협·카카오)</div>
+            <div class="task">✅ 예산 분배</div>
+            <div class="task">✅ 비상금 보관처 정하기 (주식 계좌? → 지수 문의)</div>
+            <div class="task routine">🔁 경제 공부 (YouTube)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="focus">
+        <div class="focus-title">💡 은유 키우기</div>
+        <div class="task-list" style="margin-left: 16px;">
+          <div class="task">✅ 어린이집 검토</div>
+          <div class="task">✅ 은유 영상 만들기</div>
+        </div>
+      </div>
+
+      <div class="focus">
+        <div class="focus-title">💡 살림·생활</div>
+        <div class="project">
+          <div class="project-title">🚀 이사 <span class="chip chip-task">전세이자 검토</span></div>
+          <div class="task-list">
+            <div class="task">✅ 건강검진 예약</div>
+            <div class="task">✅ 온누리카드 발급</div>
+            <div class="task">✅ mmca 프로그램 예약</div>
+            <div class="task">✅ 신발 세탁</div>
+            <div class="task">✅ 주예 휴대폰 합치기</div>
+            <div class="task routine">🔁 요리 공부</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 자기개발 -->
+  <div class="area">
+    <div class="area-header">
+      <span class="area-badge">🗂 Area</span>
+      <h2>자기개발</h2>
+      <p class="mission">꾸준한 학습·커리어 자산화로 시장가치를 높인다</p>
+    </div>
+    <div class="focus-list">
+      <div class="focus">
+        <div class="focus-title">💡 영어</div>
+        <div class="task-list" style="margin-left: 16px;">
+          <div class="task">✅ 링글</div>
+          <div class="task routine">🔁 면접 영어 준비</div>
+        </div>
+      </div>
+      <div class="focus">
+        <div class="focus-title">💡 독서</div>
+        <div class="task-list" style="margin-left: 16px;">
+          <div class="task routine">🔁 독서 30분 (스크루테이프·일반서적)</div>
+        </div>
+      </div>
+      <div class="focus">
+        <div class="focus-title">💡 운동</div>
+        <div class="task-list" style="margin-left: 16px;">
+          <div class="task routine">🔁 운동 (Do it)</div>
+        </div>
+      </div>
+      <div class="focus">
+        <div class="focus-title">💡 시사</div>
+        <div class="task-list" style="margin-left: 16px;">
+          <div class="task routine">🔁 뉴스 요약 AI 사용</div>
+        </div>
+      </div>
+      <div class="focus">
+        <div class="focus-title">💡 외모</div>
+        <div class="task-list" style="margin-left: 16px;">
+          <div class="task">✅ 신체 구조별 강화 부위 파악</div>
+        </div>
+      </div>
+      <div class="focus">
+        <div class="focus-title">💡 생활 습관</div>
+        <div class="task-list" style="margin-left: 16px;">
+          <div class="task routine">🔁 휴대폰 사용 줄이기</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 확인 필요 -->
+  <div class="unresolved">
+    <h3>확인 필요</h3>
+    <p style="font-size:14px; color:#7a7a7a; margin-bottom:16px;">어느 Area인지 동환님 판단이 필요한 항목</p>
+    <div class="project" style="margin-left:0;">
+      <div class="project-title" style="color:#fff;">🚀 아빠 사업 확장·강화</div>
+      <div class="task-list">
+        <div class="task" style="color:#7a7a7a;">가정으로 둘지, 별도 Area로 뺄지</div>
+      </div>
+    </div>
+    <div class="project" style="margin-left:0; margin-top:12px;">
+      <div class="project-title" style="color:#fff;">🚀 시각장애인 번역 봉사</div>
+      <div class="task-list">
+        <div class="task" style="color:#7a7a7a;">신앙(봉사)인지 자기개발인지</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+</body>
+</html>
